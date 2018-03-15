@@ -29,7 +29,7 @@ DIR_INC = Includes/
 
 DIR_MLX = Minilibx/
 
-NAME_SRC = main_fdf.c
+NAME_SRC = main_fdf.c draw_line.c prasing_fdf.c
 
 SRC = $(addprefix $(DIR_SRC), $(NAME_SRC))
 
@@ -39,7 +39,8 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@make -C $(DIR_LIB)
-	@$(CC) $(C_FLAGS) $(OBJ) -o $(NAME) -L $(DIR_MLX) -lmlx $(FRAMEWORKS)
+	@make -C $(DIR_MLX)
+	@$(CC) $(C_FLAGS) $(OBJ) -o $(NAME) -L $(DIR_MLX) -lmlx -L $(DIR_LIB) -lft $(FRAMEWORKS)
 	@echo "\033[0;32m✅️   make fdf.\033[0m"
 
 ./%.o: ./%.c
@@ -48,6 +49,7 @@ $(NAME): $(OBJ)
 
 clean:
 	@make clean -C $(DIR_LIB)
+	@make clean -C $(DIR_MLX)
 	@rm -f $(OBJ)
 	@echo "\033[38;5;202m🗑️   clean fdf.\033[0m" 
 
