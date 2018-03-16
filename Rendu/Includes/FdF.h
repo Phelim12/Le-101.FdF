@@ -35,6 +35,7 @@ typedef struct	s_pos
 
 typedef struct	s_draw
 {
+	t_pos size_window;
 	t_pos a;
 	t_pos b;
 	int count;
@@ -44,18 +45,31 @@ typedef struct	s_draw
 
 typedef struct	s_map
 {
+	t_pos	*line_y;
+	t_pos	*line_x;
 	t_pos	coord;
 	int		color;
 	int		stop;
 }				t_map;
 
+typedef struct	s_mlx
+{
+	void	*win_ptr;
+	void	*img_ptr;
+	void	*mlx_ptr;
+	void	*mlx_img;
+	int		endian;
+	int 	bpp;
+	int		s_l;
+}				t_mlx;
+
 int		ft_tablen(char **tab);
 char	***realloc_map(char ***old_map, int size);
 char	***parsing_line(char ***old_map, char *line);
 t_map	**parsing_map(const char *name, t_pos size_window);
-
-void		draw_line_vertical(void *mlx_ptr, void *win_ptr, t_draw info);
-void		draw_line_horizontal(void *mlx_ptr, void *win_ptr, t_draw info);
-void		draw_line(void *mlx_ptr, void *win_ptr, t_pos a, t_pos b);
+t_pos	fill_pos(int y, int x);
+t_pos	*draw_line(char *mlx_img, t_pos a, t_pos b, t_pos size_window);
+void	put_pixel_image(char *mlx_img, t_pos print, t_pos size_window);
+int		nb_pixel_line(t_pos a, t_pos b);
 
 #endif

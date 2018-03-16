@@ -13,8 +13,25 @@
 
 #include "FdF.h"
 
-int		nb_pixel_line_vertical(t_draw info)
+t_pos	*realloc_pos(t_pos *tab, t_pos pos, int size)
 {
+	t_pos *ret;
+	int cur;
+
+	cur = -1;
+	ret = (t_pos*)malloc(sizeof(t_pos) * (size));
+	while (++cur < size - 2)
+		ret[cur] = tab[cur];
+	ret[cur] = pos;
+	ret[cur + 1] = fill_pos(-1, -1);
+	if (size > 2)
+		free(tab);
+	return (ret);
+}
+
+t_pos	*draw_line_vertical(char *mlx_img, t_draw info)
+{
+	t_pos *ret;
 	int xinc;
 	int yinc;
 	int cur;
@@ -23,6 +40,7 @@ int		nb_pixel_line_vertical(t_draw info)
 	info.count = (info.dis_y / 2);
 	xinc = ((info.a.x - info.b.x) > 0) ? -1 : 1;
 	yinc = ((info.a.y - info.b.y) > 0) ? -1 : 1;
+	put_pixel_image(mlx_img, info.a, info.size_window);
 	while (cur++ <= info.dis_y)
 	{
 		info.a.y += yinc;
@@ -32,12 +50,15 @@ int		nb_pixel_line_vertical(t_draw info)
 			info.count -= info.dis_y;
 			info.a.x += xinc;
 		}
+		put_pixel_image(mlx_img, info.a, info.size_window);
+		ret = realloc_pos(ret, info.a, cur);
 	}
-	return (cur);
+	return (ret);
 }
 
-int		nb_pixel_line_horizontal(t_draw info)
+t_pos	*draw_line_horizontal(char *mlx_img, t_draw info)
 {
+	t_pos *ret;
 	int xinc;
 	int yinc;
 	int cur;
@@ -46,6 +67,7 @@ int		nb_pixel_line_horizontal(t_draw info)
 	info.count = (info.dis_x / 2);
 	xinc = ((info.a.x - info.b.x) > 0) ? -1 : 1;
 	yinc = ((info.a.y - info.b.y) > 0) ? -1 : 1;
+	put_pixel_image(mlx_img, info.a, info.size_window);
 	while (cur++ <= info.dis_x)
 	{
 		info.a.x += xinc;
@@ -55,83 +77,24 @@ int		nb_pixel_line_horizontal(t_draw info)
 			info.count -= info.dis_x;
 			info.a.y += yinc;
 		}
+		put_pixel_image(mlx_img, info.a, info.size_window);
+		ret = realloc_pos(ret, info.a, cur);
 	}
-	return (cur);
+	return (ret);
 }
 
-int		nb_pixel_line(t_pos a, t_pos b)
+t_pos	*draw_line(char *mlx_img, t_pos a, t_pos b, t_pos size_window)
 {
 	t_draw	info;
 
 	info.a = a;
 	info.b = b;
+	info.size_window = size_window;
 	info.dis_y = FT_ABS((a.y - b.y));
 	info.dis_x = FT_ABS((a.x - b.x));
 	if (info.dis_x > info.dis_y)
-		return (nb_pixel_line_horizontal(info));
+		return (draw_line_horizontal(mlx_img, info));
 	else
-		return (nb_pixel_line_vertical(info));
-}
-
-void		draw_line_vertical(void *mlx_ptr, void *win_ptr, t_draw info)
-{
-	int xinc;
-	int yinc;
-	int cur;
-
-	cur = 1;
-	info.count = (info.dis_y / 2);
-	xinc = ((info.a.x - info.b.x) > 0) ? -1 : 1;
-	yinc = ((info.a.y - info.b.y) > 0) ? -1 : 1;
-	mlx_pixel_put(mlx_ptr, win_ptr, info.a.x, info.a.y, 0xfffafa);
-	while (cur++ <= info.dis_y)
-	{
-		info.a.y += yinc;
-		info.count += info.dis_x;
-		if (info.count >= info.dis_y)
-		{
-			info.count -= info.dis_y;
-			info.a.x += xinc;
-		}
-		mlx_pixel_put(mlx_ptr, win_ptr, info.a.x, info.a.y, 0xfffafa);
-	}
-}
-
-void		draw_line_horizontal(void *mlx_ptr, void *win_ptr, t_draw info)
-{
-	int xinc;
-	int yinc;
-	int cur;
-
-	cur = 1;
-	info.count = (info.dis_x / 2);
-	xinc = ((info.a.x - info.b.x) > 0) ? -1 : 1;
-	yinc = ((info.a.y - info.b.y) > 0) ? -1 : 1;
-	mlx_pixel_put(mlx_ptr, win_ptr, info.a.x, info.a.y, 0xfffafa);
-	while (cur++ <= info.dis_x)
-	{
-		info.a.x += xinc;
-		info.count += info.dis_y;
-		if (info.count >= info.dis_x)
-		{
-			info.count -= info.dis_x;
-			info.a.y += yinc;
-		}
-		mlx_pixel_put(mlx_ptr, win_ptr, info.a.x, info.a.y, 0xfffafa);
-	}
-}
-
-void		draw_line(void *mlx_ptr, void *win_ptr, t_pos a, t_pos b)
-{
-	t_draw	info;
-
-	info.a = a;
-	info.b = b;
-	info.dis_y = FT_ABS((a.y - b.y));
-	info.dis_x = FT_ABS((a.x - b.x));
-	if (info.dis_x > info.dis_y)
-		draw_line_horizontal(mlx_ptr, win_ptr, info);
-	else
-		draw_line_vertical(mlx_ptr, win_ptr, info);
+		return (draw_line_vertical(mlx_img, info));
 }
 

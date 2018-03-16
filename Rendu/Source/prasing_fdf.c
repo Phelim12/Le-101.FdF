@@ -115,8 +115,8 @@ t_map	fill_real_map(char *params, int size_line, t_pos size_window, t_pos cur)
 	//if (ft_strchr(params, ','))
 	//	ret.color = hexa(ft_strchr(params, ','));
 	ret.coord.z = ft_atoi(params);
-	ret.coord.x = (size_window.x / 2) + ((cur.x - cur.y) * (size_line / 2));
-	ret.coord.y = ((cur.x + cur.y) * (size_line / 2)) - ret.coord.z * 5.5;
+	ret.coord.x = (size_window.x / 2.5) + ((cur.x - cur.y) * (size_line / 1.3));
+	ret.coord.y = (size_window.y / 3) + ((cur.x + cur.y) * (size_line / 3)) - ret.coord.z * 10;
 	ret.stop = 1;
 	return (ret);
 }
