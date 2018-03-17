@@ -23,8 +23,6 @@
 #include <math.h>
 #include "../Minilibx/mlx.h"
 #include "../Libft/Includes/libft.h"
-//#include "../Minilibx/mlx_int.h"
-//#include "../Minilibx/mlx_new_window.h"
 
 typedef struct	s_pos
 {
@@ -41,6 +39,8 @@ typedef struct	s_draw
 	int count;
 	int dis_x;
 	int dis_y;
+	int	xinc;
+	int	yinc;
 }				t_draw;
 
 typedef struct	s_map
@@ -71,5 +71,10 @@ t_pos	fill_pos(int y, int x);
 t_pos	*draw_line(char *mlx_img, t_pos a, t_pos b, t_pos size_window);
 void	put_pixel_image(char *mlx_img, t_pos print, t_pos size_window);
 int		nb_pixel_line(t_pos a, t_pos b);
+int		ft_tablen(char **tab);
+int		ft_maplen(char ***map);
+void	free_map_fdf(char ***map);
+void	rev_line(t_pos *line);
+t_pos	search_max_line_fdf(char ***map);
 
 #endif
