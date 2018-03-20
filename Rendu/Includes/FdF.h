@@ -15,6 +15,7 @@
 #ifndef FDF_H
 # define FDF_H
 
+# define MAP (params.map)
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -33,14 +34,17 @@ typedef struct	s_pos
 
 typedef struct	s_draw
 {
-	t_pos size_window;
+	t_pos s_win;
 	t_pos a;
 	t_pos b;
-	int count;
-	int dis_x;
-	int dis_y;
 	int	xinc;
 	int	yinc;
+	int size;
+	int count;
+	int	col_a;
+	int	col_b;
+	int dis_x;
+	int dis_y;
 }				t_draw;
 
 typedef struct	s_map
@@ -52,29 +56,65 @@ typedef struct	s_map
 	int		stop;
 }				t_map;
 
+typedef struct	s_fdf
+{
+	char	***file_map;
+	void	*mlx_img;
+	int		s_line;
+	t_pos	center;
+	t_map	**map;
+	t_pos	s_win;
+	t_pos	s_map;
+}				t_fdf;
+
 typedef struct	s_mlx
 {
 	void	*win_ptr;
 	void	*img_ptr;
 	void	*mlx_ptr;
-	void	*mlx_img;
 	int		endian;
 	int 	bpp;
 	int		s_l;
 }				t_mlx;
 
-int		ft_tablen(char **tab);
-char	***realloc_map(char ***old_map, int size);
-char	***parsing_line(char ***old_map, char *line);
-t_map	**parsing_map(const char *name, t_pos size_window);
-t_pos	fill_pos(int y, int x);
-t_pos	*draw_line(char *mlx_img, t_pos a, t_pos b, t_pos size_window);
-void	put_pixel_image(char *mlx_img, t_pos print, t_pos size_window);
-int		nb_pixel_line(t_pos a, t_pos b);
-int		ft_tablen(char **tab);
-int		ft_maplen(char ***map);
-void	free_map_fdf(char ***map);
-void	rev_line(t_pos *line);
-t_pos	search_max_line_fdf(char ***map);
+// Bordel
+
+t_pos		fill_pos(int y, int x);
+void	put_pixel_image(char *mlx_img, t_draw info, int cur);
+void	put_pixel_black(t_fdf *params, t_pos print, int max);
+void	delete_background_line_x(t_fdf *params, t_map tile, int max);
+void	delete_background_line_y(t_fdf *params, t_map tile, int max);
+void	delete_background_center(t_fdf *params, t_map tile, int max);
+void	delete_background(t_fdf *params, int y, int x);
+void		draw_map_2d(t_fdf params);
+t_mlx	init_struct_mlx(t_fdf *params);
+
+// file
+
+char		***parsing_line(char ***old_file, char *line);
+char		***realloc_file(char ***old_file, int size);
+char		***parsing_file(const char *name);
+
+// map
+
+t_map		**parsing_map(t_fdf *params);
+t_map		fill_map(t_fdf *params, int y, int x);
+
+// Tools 
+
+void		rev_line(t_pos *line);
+int			ft_tablen(char **tab);
+int			ft_maplen(char ***map);
+void		free_map_fdf(char ***map);
+t_pos		search_max_line_fdf(char ***map);
+int			check_error_fdf(char const *argv[]);
+int			print_usage_fdf(const char *name, int error);
+
+// draw
+
+t_pos		*realloc_pos(t_pos *tab, t_pos pos, int size);
+t_pos		*draw_line_vertical(char *mlx_img, t_draw info);
+t_pos		*draw_line_horizontal(char *mlx_img, t_draw info);
+t_pos		*draw_line(t_fdf params, t_map a, t_map b);
 
 #endif
