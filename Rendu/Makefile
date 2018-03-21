@@ -29,7 +29,7 @@ DIR_INC = Includes/
 
 DIR_MLX = Minilibx/
 
-NAME_SRC = main_fdf.c draw_line.c prasing_map_fdf.c prasing_file_fdf.c tools_fdf.c delete_background_fdf.c
+NAME_SRC = main_fdf.c draw_fdf.c tools_draw_fdf.c prasing_map_fdf.c prasing_file_fdf.c tools_fdf.c delete_background_fdf.c
 
 SRC = $(addprefix $(DIR_SRC), $(NAME_SRC))
 

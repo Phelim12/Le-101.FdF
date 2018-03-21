@@ -22,8 +22,8 @@ void	delete_background_line_x(t_fdf *params, t_map tile, int max)
 	while (tile.line_x[cur1].x != -1 || tile.line_x[cur1].y != -1)
 	{
 		cur2 = tile.line_x[cur1].y;
-		while (tile.line_x[cur1].x != tile.line_x[cur1 + 1].x && cur2 < max + 10)
-			put_pixel_black(params, fill_pos(++cur2, tile.line_x[cur1].x), max);
+		while (tile.line_x[cur1].x != tile.line_x[cur1 + 1].x && cur2 < max)
+			put_pixel_black(params, fill_pos(++cur2, tile.line_x[cur1].x));
 		cur1++;
 	}
 }
@@ -37,8 +37,8 @@ void	delete_background_line_y(t_fdf *params, t_map tile, int max)
 	while (tile.line_y[cur1].x != -1 || tile.line_y[cur1].y != -1)
 	{
 		cur2 = tile.line_y[cur1].y;
-		while (tile.line_y[cur1].x != tile.line_y[cur1 + 1].x && cur2 < max + 10)
-			put_pixel_black(params, fill_pos(++cur2, tile.line_y[cur1].x), max);
+		while (tile.line_y[cur1].x != tile.line_y[cur1 + 1].x && cur2 < max)
+			put_pixel_black(params, fill_pos(++cur2, tile.line_y[cur1].x));
 		cur1++;
 	}
 }
@@ -53,7 +53,7 @@ void	delete_background_center(t_fdf *params, t_map tile, int max)
 		cur++;
 	cur += tile.coord.y;
 	while (cur++ < max)
-		put_pixel_black(params, fill_pos(cur, tile.coord.x), max);
+		put_pixel_black(params, fill_pos(cur, tile.coord.x));
 }
 
 void	delete_background(t_fdf *params, int y, int x)
@@ -64,8 +64,9 @@ void	delete_background(t_fdf *params, int y, int x)
 	tile = params->map[y][x];
 	max = params->s_win.y;
 	if (tile.line_x && tile.line_y)
-		max = params->map[y + 1][x + 1].coord.y;
-	delete_background_center(params, tile, max);
+		max = (params->map[y + 1][x + 1].coord.y + 5);
+	if (tile.line_x && tile.line_y)
+		delete_background_center(params, tile, max);
 	if (tile.line_x)
 		delete_background_line_x(params, tile, max);
 	if (tile.line_y)

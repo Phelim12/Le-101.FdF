@@ -32,11 +32,20 @@ typedef struct	s_pos
 	int x;
 }				t_pos;
 
+typedef struct	s_test
+{
+	float *start;
+	float *inc;
+}				t_test;
+
 typedef struct	s_draw
 {
 	t_pos s_win;
 	t_pos a;
 	t_pos b;
+	t_test	gradient;
+	int z;
+	float	alt;
 	int	xinc;
 	int	yinc;
 	int size;
@@ -59,45 +68,49 @@ typedef struct	s_map
 typedef struct	s_fdf
 {
 	char	***file_map;
-	void	*mlx_img;
-	int		s_line;
-	t_pos	center;
 	t_map	**map;
+	t_pos	center;
 	t_pos	s_win;
 	t_pos	s_map;
-}				t_fdf;
-
-typedef struct	s_mlx
-{
+	t_pos	cur;
+	int		s_line;
+	float	alt;
+	int		y;
+	int		x;
+	void	*mlx_img;
 	void	*win_ptr;
 	void	*img_ptr;
 	void	*mlx_ptr;
 	int		endian;
 	int 	bpp;
 	int		s_l;
-}				t_mlx;
+}				t_fdf;
 
 // Bordel
 
+void	init_gradient_2(t_draw *info);
+int		size_line_vertical(t_draw info);
+int		size_line_horizontal(t_draw info);
+t_test	init_gradient_1(t_draw info);
 t_pos		fill_pos(int y, int x);
-void	put_pixel_image(char *mlx_img, t_draw info, int cur);
-void	put_pixel_black(t_fdf *params, t_pos print, int max);
+void	put_pixel_image(char *mlx_img, t_draw *info, int pix);
+void	put_pixel_black(t_fdf *params, t_pos print);
 void	delete_background_line_x(t_fdf *params, t_map tile, int max);
 void	delete_background_line_y(t_fdf *params, t_map tile, int max);
 void	delete_background_center(t_fdf *params, t_map tile, int max);
 void	delete_background(t_fdf *params, int y, int x);
 void		draw_map_2d(t_fdf params);
-t_mlx	init_struct_mlx(t_fdf *params);
+void	init_struct_mlx(t_fdf *params);
 
 // file
-
+int			nb_line_file(const char *name);
 char		***parsing_line(char ***old_file, char *line);
 char		***realloc_file(char ***old_file, int size);
 char		***parsing_file(const char *name);
 
 // map
 
-t_map		**parsing_map(t_fdf *params);
+t_map		**parsing_map(t_fdf *params, int init);
 t_map		fill_map(t_fdf *params, int y, int x);
 
 // Tools 

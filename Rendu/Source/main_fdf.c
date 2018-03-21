@@ -13,64 +13,50 @@
 
 #include "FdF.h"
 
-void	put_pixel_black(t_fdf *params, t_pos print, int max)
+void	init_struct_mlx(t_fdf *params)
 {
-	unsigned char	*color;
-	char			*img;
-	int				cur;
-
-	color = (unsigned char *)ft_strnew(5);
-	//if (max == params->s_win.y)
-	//	ft_memcpy(color, &print.z, 4);
-	img = (char *)params->mlx_img;
-	if (print.y < 0 || print.x < 0 || print.y >= params->s_win.y || print.x >= params->s_win.x)
-		return ;
-	cur = (4 * print.x) + (print.y * (params->s_win.x * 4));
-	if (cur > (params->s_win.x * params->s_win.y * 4))
-		return ;
-	img[cur] = color[0];
-	img[cur + 1] = color[1];
-	img[cur + 2] = color[2];
-	img[cur + 3] = 0;
+	params->mlx_ptr = mlx_init();
+	params->win_ptr = mlx_new_window(params->mlx_ptr, params->s_win.x, params->s_win.y, "FdF");
+	params->img_ptr = mlx_new_image(params->mlx_ptr, params->s_win.x, params->s_win.y);
+	params->mlx_img = mlx_get_data_addr(params->img_ptr, &(params->bpp), &(params->s_l), &(params->endian));
 }
 
-void	draw_map_2d(t_fdf params)
+int refresh_fdf(int key, t_fdf *params)
 {
-	int		y;
-	int		x;
+	char *img;
+	int cur;
 
-	y = -1;
-	while (MAP[++y])
-	{
-		x = -1;
-		while (MAP[y][++x].stop)
-		{
-			MAP[y][x].line_x = NULL;
-			MAP[y][x].line_y = NULL;
-			if (x < (params.s_map.x - 1))
-				MAP[y][x].line_x = draw_line(params, MAP[y][x], MAP[y][1 + x]);
-			if (y < (params.s_map.y - 1))
-				MAP[y][x].line_y = draw_line(params, MAP[y][x], MAP[y + 1][x]);
-			delete_background(&params, y, x);
-		}
-	}
-}
+	cur = -1;
+	img = params->mlx_img;
+	if (key == 69)
+		params->s_line += 2;
+	if (key == 78)
+		params->s_line -= 2;
+	if (key == 24)
+		params->alt += 0.3;
+	if (key == 27)
+		params->alt -= 0.3;
+	if (key == 125)
+		params->y -= 25;
+	if (key == 126)
+		params->y += 25;
+	if (key == 123)
+		params->x += 25;
+	if (key == 124)
+		params->x -= 25;
+	if (params->s_line < 3)
+		params->s_line = 3;
+	while (++cur < (params->s_win.y * params->s_win.x * 4))
+		img[cur] = 0;
+	params->map = parsing_map(params, 0);
+	draw_map_2d(*params);
+	mlx_put_image_to_window(params->mlx_ptr, params->win_ptr, params->img_ptr, 0, 0);
+	return (0);
 
-
-t_mlx	init_struct_mlx(t_fdf *params)
-{
-	t_mlx	ret;
-
-	ret.mlx_ptr = mlx_init();
-	ret.win_ptr = mlx_new_window(ret.mlx_ptr, params->s_win.x, params->s_win.y, "FdF");
-	ret.img_ptr = mlx_new_image(ret.mlx_ptr, params->s_win.x, params->s_win.y);
-	params->mlx_img = mlx_get_data_addr(ret.img_ptr, &(ret.bpp), &(ret.s_l), &(ret.endian));
-	return (ret);
 }
 
 int		main(int argc, char const *argv[])
 {
-	t_mlx	struct_mlx;
 	t_fdf	params;
 	int		error;
 	
@@ -80,10 +66,15 @@ int		main(int argc, char const *argv[])
 		params.file_map = parsing_file(argv[1]);
 	else
 		return (print_usage_fdf(argv[1], error));
-	params.map = parsing_map(&params);
-	struct_mlx = init_struct_mlx(&params);
+	printf("salut\n");
+	params.map = parsing_map(&params, 1);
+	printf("salut\n");
+	init_struct_mlx(&params);
+	printf("salut\n");
 	draw_map_2d(params);
-	mlx_put_image_to_window(struct_mlx.mlx_ptr, struct_mlx.win_ptr, struct_mlx.img_ptr, 0, 0);
-	mlx_loop(struct_mlx.mlx_ptr);
+	printf("salut\n");
+	mlx_put_image_to_window(params.mlx_ptr, params.win_ptr, params.img_ptr, 0, 0);
+	mlx_key_hook(params.win_ptr, refresh_fdf, &params);
+	mlx_loop(params.mlx_ptr);
 	return (0);
 } 

@@ -13,7 +13,7 @@
 
 #include "FdF.h"
 
-int		ft_line_file(const char *name)
+int		nb_line_file(const char *name)
 {
 	char	sample[1024];
 	int		n_read;
@@ -43,7 +43,7 @@ char	***parsing_file(const char *name)
 	int 	fd;
 
 	cur = 0;
-	ret = (char ***)malloc(sizeof(char **) * (ft_line_file(name)));
+	ret = (char ***)malloc(sizeof(char **) * (nb_line_file(name)));
 	fd = open(name, O_RDONLY);
 	while (get_next_line(fd, &line) > 0)
 	{
