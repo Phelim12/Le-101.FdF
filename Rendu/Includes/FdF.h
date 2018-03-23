@@ -16,6 +16,7 @@
 # define FDF_H
 
 # define MAP (params.map)
+# define S_WIN (params.map)
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -72,7 +73,7 @@ typedef struct	s_fdf
 	t_pos	center;
 	t_pos	s_win;
 	t_pos	s_map;
-	t_pos	cur;
+	int 	print;
 	int		s_line;
 	float	alt;
 	int		y;
@@ -87,17 +88,21 @@ typedef struct	s_fdf
 }				t_fdf;
 
 // Bordel
-
+int 	check_delete_background_x(t_fdf params, int y, int x);
+int 	check_delete_background_y(t_fdf params, int y, int x);
+void	put_pixel_image(t_fdf *params, t_draw *info, int pix);
+t_pos	*draw_line_vertical(t_fdf *params, t_draw info, int cur);
+t_pos	*draw_line_horizontal(t_fdf *params, t_draw info, int cur);
+t_pos	*draw_line(t_fdf *params, t_map a, t_map b);
 void	init_gradient_2(t_draw *info);
 int		size_line_vertical(t_draw info);
 int		size_line_horizontal(t_draw info);
 t_test	init_gradient_1(t_draw info);
 t_pos		fill_pos(int y, int x);
-void	put_pixel_image(char *mlx_img, t_draw *info, int pix);
 void	put_pixel_black(t_fdf *params, t_pos print);
-void	delete_background_line_x(t_fdf *params, t_map tile, int max);
-void	delete_background_line_y(t_fdf *params, t_map tile, int max);
-void	delete_background_center(t_fdf *params, t_map tile, int max);
+void	delete_background_line_x(t_fdf *params, t_map tile, int max, int inc);
+void	delete_background_line_y(t_fdf *params, t_map tile, int max, int inc);
+void	delete_background_center(t_fdf *params, int y, int x, int max);
 void	delete_background(t_fdf *params, int y, int x);
 void		draw_map_2d(t_fdf params);
 void	init_struct_mlx(t_fdf *params);
@@ -126,8 +131,4 @@ int			print_usage_fdf(const char *name, int error);
 // draw
 
 t_pos		*realloc_pos(t_pos *tab, t_pos pos, int size);
-t_pos		*draw_line_vertical(char *mlx_img, t_draw info);
-t_pos		*draw_line_horizontal(char *mlx_img, t_draw info);
-t_pos		*draw_line(t_fdf params, t_map a, t_map b);
-
 #endif

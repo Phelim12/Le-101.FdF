@@ -165,6 +165,7 @@ t_pos	search_max_line_fdf(char ***map)
 			ret.x = x;
 	}
 	ret.z = search_floor_map(relief, tab);
+	free(tab);
 	ret.y = y;
 	return (ret);
 }

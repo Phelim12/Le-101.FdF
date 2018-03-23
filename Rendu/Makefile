@@ -17,7 +17,7 @@ CC = gcc
 
 NAME = fdf
 
-C_FLAGS = 
+C_FLAGS = -o2
 
 FRAMEWORKS = -framework OpenGL -framework AppKit
 

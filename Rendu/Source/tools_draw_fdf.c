@@ -51,30 +51,11 @@ int		size_line_horizontal(t_draw info)
 	return (ret);
 }
 
-void	put_pixel_image(char *mlx_img, t_draw *info, int pix)
-{
-	int				cur;
-
-	if (info->a.y < 0 || info->a.x < 0 ||
-		info->a.y >= info->s_win.y || info->a.x >= info->s_win.x)
-		return ;
-	cur = (4 * info->a.x) + (info->a.y * (info->s_win.x * 4));
-	if (cur > (info->s_win.x * info->s_win.y * 4))
-		return ;
-	info->gradient.start[0] += info->gradient.inc[0];
-	info->gradient.start[1] += info->gradient.inc[1];
-	info->gradient.start[2] += info->gradient.inc[2];
-	mlx_img[cur] = (char)((255 / 100) * info->gradient.start[0]);
-	mlx_img[cur + 1] = (char)((255 / 100) * info->gradient.start[1]);
-	mlx_img[cur + 2] = (char)((255 / 100) * info->gradient.start[2]);
-	mlx_img[cur + 3] = 0;
-}
-
 void	init_gradient_2(t_draw *info)
 {
-	info->gradient.inc[0] = -((info->gradient.inc[0] * 100) / info->size);
-	info->gradient.inc[1] = -((info->gradient.inc[1] * 100) / info->size);
-	info->gradient.inc[2] = -((info->gradient.inc[2] * 100) / info->size);
+	info->gradient.inc[0] = -((info->gradient.inc[0] * 90) / info->size);
+	info->gradient.inc[1] = -((info->gradient.inc[1] * 90) / info->size);
+	info->gradient.inc[2] = -((info->gradient.inc[2] * 90) / info->size);
 }
 
 t_test	init_gradient_1(t_draw info)

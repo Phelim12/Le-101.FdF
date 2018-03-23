@@ -33,17 +33,17 @@ int refresh_fdf(int key, t_fdf *params)
 	if (key == 78)
 		params->s_line -= 2;
 	if (key == 24)
-		params->alt += 0.3;
+		params->alt += 0.1;
 	if (key == 27)
-		params->alt -= 0.3;
+		params->alt -= 0.1;
 	if (key == 125)
-		params->y -= 25;
+		params->y -= (params->s_win.y / 20);
 	if (key == 126)
-		params->y += 25;
+		params->y += (params->s_win.y / 20);
 	if (key == 123)
-		params->x += 25;
+		params->x += (params->s_win.x / 20);
 	if (key == 124)
-		params->x -= 25;
+		params->x -= (params->s_win.x / 20);
 	if (params->s_line < 3)
 		params->s_line = 3;
 	while (++cur < (params->s_win.y * params->s_win.x * 4))
@@ -66,15 +66,11 @@ int		main(int argc, char const *argv[])
 		params.file_map = parsing_file(argv[1]);
 	else
 		return (print_usage_fdf(argv[1], error));
-	printf("salut\n");
 	params.map = parsing_map(&params, 1);
-	printf("salut\n");
 	init_struct_mlx(&params);
-	printf("salut\n");
 	draw_map_2d(params);
-	printf("salut\n");
 	mlx_put_image_to_window(params.mlx_ptr, params.win_ptr, params.img_ptr, 0, 0);
-	mlx_key_hook(params.win_ptr, refresh_fdf, &params);
+	mlx_hook(params.win_ptr, 2, 0, refresh_fdf, &params);
 	mlx_loop(params.mlx_ptr);
 	return (0);
 } 
