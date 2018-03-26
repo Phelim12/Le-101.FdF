@@ -11,7 +11,8 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "FdF.h"
+#include "fdf.h"
+#include "function_fdf.h"
 
 int		size_line_vertical(t_draw info)
 {
@@ -53,33 +54,31 @@ int		size_line_horizontal(t_draw info)
 
 void	init_gradient_2(t_draw *info)
 {
-	info->gradient.inc[0] = -((info->gradient.inc[0] * 90) / info->size);
-	info->gradient.inc[1] = -((info->gradient.inc[1] * 90) / info->size);
-	info->gradient.inc[2] = -((info->gradient.inc[2] * 90) / info->size);
+	info->inc[0] = (info->inc[0] - info->start[0]);
+	info->inc[1] = (info->inc[1] - info->start[1]);
+	info->inc[2] = (info->inc[2] - info->start[2]);
+	info->inc[0] /= info->size;
+	info->inc[1] /= info->size;
+	info->inc[2] /= info->size;
 }
 
-t_test	init_gradient_1(t_draw info)
+void	init_gradient_1(t_draw *info)
 {
 	unsigned char	*col_a;
 	unsigned char	*col_b;
-	t_test			gradient;
 
 	col_a = (unsigned char *)ft_strnew(5);
 	col_b = (unsigned char *)ft_strnew(5);
-	gradient.inc = (float *)malloc(sizeof(float) * (4));
-	gradient.start = (float *)malloc(sizeof(float) * (4));
-	ft_memcpy(col_a, &info.col_a, 4);
-	ft_memcpy(col_b, &info.col_b, 4);
-	gradient.start[0] = (float)(((float)col_a[0] / 255) * 100);
-	gradient.start[1] = (float)(((float)col_a[1] / 255) * 100);
-	gradient.start[2] = (float)(((float)col_a[2] / 255) * 100);
-	gradient.inc[0] = (col_a[0] == col_b[0]) ? 0 : \
-	(float)(FT_ABS(col_a[0] - col_b[0]) / (float)255);
-	gradient.inc[1] = (col_a[1] == col_b[1]) ? 0 : \
-	(float)(FT_ABS(col_a[1] - col_b[1]) / (float)255);
-	gradient.inc[2] = (col_a[2] == col_b[2]) ? 0 : \
-	(float)(FT_ABS(col_a[2] - col_b[2]) / (float)255);
+	ft_memcpy(col_a, &info->col_a, 4);
+	ft_memcpy(col_b, &info->col_b, 4);
+	info->inc = (float *)malloc(sizeof(float) * (4));
+	info->start = (float *)malloc(sizeof(float) * (4));
+	info->start[0] = (float)(((float)col_a[0] / 255) * 100);
+	info->start[1] = (float)(((float)col_a[1] / 255) * 100);
+	info->start[2] = (float)(((float)col_a[2] / 255) * 100);
+	info->inc[0] = (float)(((float)col_b[0] / 255) * 100);
+	info->inc[1] = (float)(((float)col_b[1] / 255) * 100);
+	info->inc[2] = (float)(((float)col_b[2] / 255) * 100);
 	free(col_a);
 	free(col_b);
-	return (gradient);
 }

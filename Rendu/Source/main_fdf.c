@@ -11,66 +11,66 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "FdF.h"
+#include "fdf.h"
+#include "function_fdf.h"
 
 void	init_struct_mlx(t_fdf *params)
 {
+	int s_win_x;
+	int s_win_y;
+
+	s_win_x = params->s_win.x;
+	s_win_y = params->s_win.y;
 	params->mlx_ptr = mlx_init();
-	params->win_ptr = mlx_new_window(params->mlx_ptr, params->s_win.x, params->s_win.y, "FdF");
-	params->img_ptr = mlx_new_image(params->mlx_ptr, params->s_win.x, params->s_win.y);
-	params->mlx_img = mlx_get_data_addr(params->img_ptr, &(params->bpp), &(params->s_l), &(params->endian));
+	params->win_ptr = mlx_new_window(MLX_PTR, s_win_x, s_win_y, "FdF");
+	params->img_ptr = mlx_new_image(MLX_PTR, s_win_x, s_win_y);
+	params->mlx_img = mlx_get_data_addr(IMG_PTR, BPP, S_L, ENDIAN);
 }
 
-int refresh_fdf(int key, t_fdf *params)
+int		refresh_map(int key, t_fdf *params)
 {
-	char *img;
-	int cur;
+	char	*img;
+	int		cur;
 
 	cur = -1;
 	img = params->mlx_img;
-	if (key == 69)
-		params->s_line += 2;
-	if (key == 78)
-		params->s_line -= 2;
-	if (key == 24)
-		params->alt += 0.1;
-	if (key == 27)
-		params->alt -= 0.1;
-	if (key == 125)
-		params->y -= (params->s_win.y / 20);
-	if (key == 126)
-		params->y += (params->s_win.y / 20);
-	if (key == 123)
-		params->x += (params->s_win.x / 20);
-	if (key == 124)
-		params->x -= (params->s_win.x / 20);
-	if (params->s_line < 3)
-		params->s_line = 3;
+	if (key == 53)
+	{
+		free_map_fdf(params);
+		free_file_fdf(params->file_map);
+		exit(EXIT_SUCCESS);
+	}
+	if (modif_params_map(key, params))
+		return (0);
 	while (++cur < (params->s_win.y * params->s_win.x * 4))
 		img[cur] = 0;
+	free_map_fdf(params);
 	params->map = parsing_map(params, 0);
-	draw_map_2d(*params);
-	mlx_put_image_to_window(params->mlx_ptr, params->win_ptr, params->img_ptr, 0, 0);
+	print_map_iso(*params);
+	mlx_put_image_to_window(MLX_PTR, params->win_ptr, params->img_ptr, 0, 0);
 	return (0);
-
 }
 
 int		main(int argc, char const *argv[])
 {
 	t_fdf	params;
 	int		error;
-	
-	params.s_win.y = 1000;
-	params.s_win.x = 1500;
-	if (!(error = check_error_fdf(argv)))
+
+	if (!(error = check_error_fdf(argv, argc)))
+	{
 		params.file_map = parsing_file(argv[1]);
+		if (check_error_map_fdf(params.file_map))
+			print_error_fdf(argv[0], params.file_map);
+	}
 	else
-		return (print_usage_fdf(argv[1], error));
-	params.map = parsing_map(&params, 1);
+		return (print_usage_fdf(argv[0], argv[1], error));
+	params.s_win.x = size_win_width();
+	params.s_win.y = size_win_height();
 	init_struct_mlx(&params);
-	draw_map_2d(params);
-	mlx_put_image_to_window(params.mlx_ptr, params.win_ptr, params.img_ptr, 0, 0);
-	mlx_hook(params.win_ptr, 2, 0, refresh_fdf, &params);
+	params.map = parsing_map(&params, 1);
+	print_map_iso(params);
+	mlx_put_image_to_window(params.mlx_ptr, WIN_PTR, params.img_ptr, 0, 0);
+	mlx_hook(params.win_ptr, 2, 0, refresh_map, &params);
 	mlx_loop(params.mlx_ptr);
 	return (0);
-} 
+}

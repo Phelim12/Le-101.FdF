@@ -17,7 +17,7 @@ CC = gcc
 
 NAME = fdf
 
-C_FLAGS = -o2
+C_FLAGS = -Wall -Wextra -Werror -o2
 
 FRAMEWORKS = -framework OpenGL -framework AppKit
 
@@ -29,7 +29,8 @@ DIR_INC = Includes/
 
 DIR_MLX = Minilibx/
 
-NAME_SRC = main_fdf.c draw_fdf.c tools_draw_fdf.c prasing_map_fdf.c prasing_file_fdf.c tools_fdf.c delete_background_fdf.c
+NAME_SRC =	main_fdf.c draw_fdf.c tools_draw_fdf.c prasing_map_fdf.c prasing_file_fdf.c \
+			delete_background_fdf.c print_map_fdf.c search_fdf.c tools_fdf_01.c tools_fdf_00.c error_usage_fdf.c
 
 SRC = $(addprefix $(DIR_SRC), $(NAME_SRC))
 

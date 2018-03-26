@@ -11,7 +11,8 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "FdF.h"
+#include "fdf.h"
+#include "function_fdf.h"
 
 int		check_delete(t_pos *line, int y, int x)
 {
@@ -70,16 +71,16 @@ void	delete_background_center(t_fdf *params, int y, int x, int max)
 
 	line_y = NULL;
 	line_x = NULL;
-	if (params->map[y][x].line_y)
-		line_y = params->map[y][x].line_y;
-	if (params->map[y][x].line_x)
-		line_x = params->map[y][x].line_x;
-	s_x = params->map[y][x].coord.x;
-	cur = (params->map[y][x].coord.y + 1);
+	if (MAP_PTR[y][x].line_y)
+		line_y = MAP_PTR[y][x].line_y;
+	if (MAP_PTR[y][x].line_x)
+		line_x = MAP_PTR[y][x].line_x;
+	s_x = MAP_PTR[y][x].coord.x;
+	cur = (MAP_PTR[y][x].coord.y > -1) ? (MAP_PTR[y][x].coord.y + 1) : 0;
 	while (check_delete(line_x, cur, s_x) || check_delete(line_y, cur, s_x))
 		cur++;
-	while (cur++ < max)
-		put_pixel_black(params, fill_pos(cur, s_x));
+	while (cur < max)
+		put_pixel_black(params, fill_pos(cur++, s_x));
 }
 
 void	delete_background(t_fdf *params, int y, int x)
@@ -88,23 +89,25 @@ void	delete_background(t_fdf *params, int y, int x)
 	int		inc;
 	int		max;
 
-	max = params->s_win.y;
-	tile = params->map[y][x];
+	max = 0;
+	tile = MAP_PTR[y][x];
 	if (tile.line_x && tile.line_y)
-		max = (params->map[y + 1][x + 1].coord.y);
-	if (tile.line_y && max < params->map[y + 1][x].coord.y)
-		max = (params->map[y + 1][x].coord.y);
-	if (tile.line_x && max < params->map[y][x + 1].coord.y)
-		max = (params->map[y][x + 1].coord.y);
+		max = (MAP_PTR[y + 1][x + 1].coord.y);
+	else if (tile.line_y && tile.line_x && max < MAP_PTR[y + 1][x].coord.y)
+		max = (MAP_PTR[y + 1][x].coord.y);
+	else if (tile.line_y && tile.line_x && max < MAP_PTR[y][x + 1].coord.y)
+		max = (MAP_PTR[y][x + 1].coord.y);
+	else
+		max = params->s_win.y;
 	delete_background_center(params, y, x, max);
 	if (tile.line_x)
 	{
-		inc = ((params->map[y][x + 1].coord.z) * params->alt);
+		inc = ((MAP_PTR[y][x + 1].coord.z) * params->alt);
 		delete_background_line_x(params, tile, max, inc);
 	}
 	if (tile.line_y)
 	{
-		inc = ((params->map[y + 1][x].coord.z) * params->alt);
+		inc = ((MAP_PTR[y + 1][x].coord.z) * params->alt);
 		delete_background_line_y(params, tile, max, inc);
 	}
 }

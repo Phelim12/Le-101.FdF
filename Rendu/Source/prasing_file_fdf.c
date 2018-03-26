@@ -11,7 +11,8 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "FdF.h"
+#include "fdf.h"
+#include "function_fdf.h"
 
 int		nb_line_file(const char *name)
 {
@@ -40,7 +41,7 @@ char	***parsing_file(const char *name)
 	char	***ret;
 	char	*line;
 	int		cur;
-	int 	fd;
+	int		fd;
 
 	cur = 0;
 	ret = (char ***)malloc(sizeof(char **) * (nb_line_file(name)));
@@ -48,8 +49,10 @@ char	***parsing_file(const char *name)
 	while (get_next_line(fd, &line) > 0)
 	{
 		ret[cur++] = ft_strsplit(line, ' ');
-		free(line);
+		ft_strdel(&line);
 	}
+	get_next_line(fd, &line);
+	ft_strdel(&line);
 	ret[cur] = NULL;
 	return (ret);
 }

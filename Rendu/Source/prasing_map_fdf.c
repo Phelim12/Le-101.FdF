@@ -11,36 +11,13 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "FdF.h"
-
-
-int		ft_hexatoi(const char *s)
-{
-	int nb;
-
-	nb = 0;
-	while (*s == 32)
-		s++;
-	if (*s == '0' && s++)
-		if (*s++ != 'x')
-			return (0);
-	while ((*s >= '0' && *s <= '9') || (*s >= 'A' && *s <= 'F')
-		|| (*s >= 'a' && *s <= 'f'))
-	{
-		if (*s >= '0' && *s <= '9')
-			nb = nb * 16 + (*s++ - '0');
-		else if (*s >= 'a' && *s <= 'f')
-			nb = nb * 16 + (*s++ - 'W');
-		else
-			nb = nb * 16 + (*s++ - '7');
-	}
-	return (nb);
-}
+#include "fdf.h"
+#include "function_fdf.h"
 
 void	init_struct_fdf(t_fdf *ptr, int init)
 {
 	int		c_x;
-	int 	c_y;
+	int		c_y;
 
 	if (init)
 	{
@@ -96,4 +73,3 @@ t_map	**parsing_map(t_fdf *params, int init)
 	ret[y] = NULL;
 	return (ret);
 }
-
