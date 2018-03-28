@@ -52,7 +52,7 @@ void	put_pixel_image(t_fdf *params, t_draw *info)
 	img[cur + 3] = 0;
 }
 
-t_pos	*draw_line_vertical(t_fdf *params, t_draw info, int cur)
+t_pos	*draw_line_vertical(t_fdf *params, t_draw info, int cur1, int cur2)
 {
 	t_pos	*ret;
 
@@ -61,7 +61,7 @@ t_pos	*draw_line_vertical(t_fdf *params, t_draw info, int cur)
 	init_gradient_2(&info);
 	put_pixel_image(params, &info);
 	ret = (t_pos*)malloc(sizeof(t_pos) * (info.size + 2));
-	while (cur++ <= info.dis_y)
+	while (cur1++ <= info.dis_y)
 	{
 		info.a.y += info.yinc;
 		info.count += info.dis_x;
@@ -69,19 +69,19 @@ t_pos	*draw_line_vertical(t_fdf *params, t_draw info, int cur)
 		{
 			info.count -= info.dis_y;
 			info.a.x += info.xinc;
+			if (cur1 != 2)
+				cur2++;
 		}
+		ret[cur2] = fill_pos((info.a.y + 1), info.a.x);
 		put_pixel_image(params, &info);
-		ret[cur - 2] = info.a;
 	}
-	ret[cur - 2] = fill_pos(-1, -1);
-	if (info.a.z < info.b.z || (info.a.z * info.alt) < 0)
-		rev_line(ret);
+	ret[0] = fill_pos(cur2, cur2);
 	free(info.inc);
 	free(info.start);
 	return (ret);
 }
 
-t_pos	*draw_line_horizontal(t_fdf *params, t_draw info, int cur)
+t_pos	*draw_line_horizontal(t_fdf *params, t_draw info, int cur1, int cur2)
 {
 	t_pos	*ret;
 
@@ -90,7 +90,7 @@ t_pos	*draw_line_horizontal(t_fdf *params, t_draw info, int cur)
 	init_gradient_2(&info);
 	put_pixel_image(params, &info);
 	ret = (t_pos*)malloc(sizeof(t_pos) * (info.size + 2));
-	while (cur++ <= info.dis_x)
+	while (cur1++ <= info.dis_x)
 	{
 		info.a.x += info.xinc;
 		info.count += info.dis_y;
@@ -100,11 +100,10 @@ t_pos	*draw_line_horizontal(t_fdf *params, t_draw info, int cur)
 			info.a.y += info.yinc;
 		}
 		put_pixel_image(params, &info);
-		ret[cur - 2] = info.a;
+		if (cur2 == 1 || ret[cur2 - 1].x != info.a.x)
+			ret[cur2++] = fill_pos((info.a.y + 1), info.a.x);
 	}
-	ret[cur - 2] = fill_pos(-1, -1);
-	if (info.a.z < info.b.z || (info.a.z * info.alt) < 0)
-		rev_line(ret);
+	ret[0] = fill_pos(cur2, cur2);
 	free(info.inc);
 	free(info.start);
 	return (ret);
@@ -126,7 +125,7 @@ t_pos	*draw_line(t_fdf *params, t_map a, t_map b)
 	info.yinc = ((info.a.y - info.b.y) > 0) ? -1 : 1;
 	init_gradient_1(&info);
 	if (info.dis_x > info.dis_y)
-		return (draw_line_horizontal(params, info, 1));
+		return (draw_line_horizontal(params, info, 1, 1));
 	else
-		return (draw_line_vertical(params, info, 1));
+		return (draw_line_vertical(params, info, 1, 1));
 }

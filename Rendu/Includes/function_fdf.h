@@ -32,8 +32,8 @@ int		main(int argc, char const *argv[]);
 
 void	put_pixel_black(t_fdf *params, t_pos print);
 void	put_pixel_image(t_fdf *params, t_draw *info);
-t_pos	*draw_line_vertical(t_fdf *params, t_draw info, int cur);
-t_pos	*draw_line_horizontal(t_fdf *params, t_draw info, int cur);
+t_pos	*draw_line_vertical(t_fdf *params, t_draw info, int cur1, int cur2);
+t_pos	*draw_line_horizontal(t_fdf *params, t_draw info, int cur1, int cur2);
 t_pos	*draw_line(t_fdf *params, t_map a, t_map b);
 
 /*
@@ -127,8 +127,8 @@ char	***parsing_file(const char *name);
 */
 
 int		check_delete(t_pos *line, int y, int x);
-void	delete_background_line_x(t_fdf *params, t_map tile, int max, int inc);
-void	delete_background_line_y(t_fdf *params, t_map tile, int max, int inc);
+void	delete_background_line_x(t_fdf *params, t_map tile, int max);
+void	delete_background_line_y(t_fdf *params, t_map tile, int max);
 void	delete_background_center(t_fdf *params, int y, int x, int max);
 void	delete_background(t_fdf *params, int y, int x);
 

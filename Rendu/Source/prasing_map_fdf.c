@@ -24,6 +24,7 @@ void	init_struct_fdf(t_fdf *ptr, int init)
 		ptr->y = 0;
 		ptr->x = 0;
 		ptr->alt = 0.2;
+		ptr->min_y = 0;
 		ptr->s_map = search_max_line_fdf(ptr->file_map);
 		ptr->s_line = (ptr->s_win.x + ptr->s_win.y);
 		ptr->s_line /= ((ptr->s_map.y + ptr->s_map.x));
@@ -45,6 +46,8 @@ t_map	fill_map(t_fdf *params, int y, int x)
 	ret.coord.x = (params->center.x + ((x - y) * (params->s_line / 1.42)));
 	ret.coord.y = (params->center.y + ((x + y) * (params->s_line / 3.22)));
 	ret.coord.y -= (ret.coord.z * ((params->alt * params->s_line) / 5));
+	if (ret.coord.y < params->min_y)
+		params->min_y = ret.coord.y;
 	if (ft_strstr(params->file_map[y][x], "0x"))
 		ret.color = ft_hexatoi(ft_strstr(params->file_map[y][x], "0x") + 2);
 	else

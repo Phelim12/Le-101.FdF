@@ -107,6 +107,7 @@ typedef struct	s_fdf
 	float	alt;
 	int		s_line;
 	int		endian;
+	int		min_y;
 	int		bpp;
 	int		s_l;
 	int		y;
