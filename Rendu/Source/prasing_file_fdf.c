@@ -46,7 +46,7 @@ char	***parsing_file(const char *name)
 	cur = 0;
 	ret = (char ***)malloc(sizeof(char **) * (nb_line_file(name)));
 	fd = open(name, O_RDONLY);
-	while (get_next_line(fd, &line) > 0)
+	while ((get_next_line(fd, &line) > 0))
 	{
 		ret[cur++] = ft_strsplit(line, ' ');
 		ft_strdel(&line);

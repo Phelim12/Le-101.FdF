@@ -17,9 +17,9 @@
 void	print_error_fdf(char const *name, char ***map)
 {
 	if (ft_strstr(name, "./"))
-		ft_putstr_fd((name + 2), 1);
+		ft_putstr_fd((name + 2), 2);
 	else
-		ft_putstr_fd(name, 1);
+		ft_putstr_fd(name, 2);
 	ft_putendl_fd(": Error the map is not true", 2);
 	free_file_fdf(map);
 	exit(EXIT_SUCCESS);
@@ -27,12 +27,18 @@ void	print_error_fdf(char const *name, char ***map)
 
 int		check_error_fdf(char const *argv[], int argc)
 {
-	int fd;
+	char	sample[2];
+	int		fd;
 
 	if (argc != 2)
 		return (1);
 	if ((fd = open(argv[1], O_RDONLY)) == -1)
 		return (2);
+	else if ((read(fd, sample, 2)) == 0)
+	{
+		close(fd);
+		return (3);
+	}
 	close(fd);
 	return (0);
 }
@@ -41,21 +47,26 @@ int		print_usage_fdf(const char *name, const char *name_file, int error)
 {
 	if (error == 1)
 	{
-		ft_putstr_fd("usage: ", 1);
+		ft_putstr_fd("usage: ", 2);
 		if (ft_strstr(name, "./"))
-			ft_putstr_fd((name + 2), 1);
+			ft_putstr_fd((name + 2), 2);
 		else
-			ft_putstr_fd(name, 1);
-		ft_putendl_fd(" [file]", 1);
+			ft_putstr_fd(name, 2);
+		ft_putendl_fd(" [file]", 2);
 	}
 	if (error == 2)
 	{
 		if (ft_strstr(name, "./"))
-			ft_putstr_fd((name + 2), 1);
+			ft_putstr_fd((name + 2), 2);
 		else
-			ft_putstr_fd(name, 1);
+			ft_putstr_fd(name, 2);
 		ft_putstr_fd(": no such file or directory: ", 2);
 		ft_putendl_fd(name_file, 2);
+	}
+	if (error == 3)
+	{
+		ft_putstr_fd(name_file, 2);
+		ft_putendl_fd(": file empty", 2);
 	}
 	return (0);
 }
