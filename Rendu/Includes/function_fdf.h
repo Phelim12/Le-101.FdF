@@ -73,9 +73,9 @@ int		size_win_height(void);
 **┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 */
 
+void	free_line_map(t_map *tile);
 void	delete_first_line(t_fdf *params);
-int		faster_display_x(t_fdf params, int y, int x);
-int		faster_display_y(t_fdf params, int y, int x);
+int		faster_display(t_fdf params, int y, int x);
 void	print_map_iso(t_fdf params);
 
 /*

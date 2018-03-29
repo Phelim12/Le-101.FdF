@@ -14,6 +14,14 @@
 #include "fdf.h"
 #include "function_fdf.h"
 
+void	free_line_map(t_map *tile)
+{
+	if (tile->line_x)
+		free(tile->line_x);
+	if (tile->line_y)
+		free(tile->line_y);
+}
+
 void	delete_first_line(t_fdf *params)
 {
 	char	*img;
@@ -27,60 +35,29 @@ void	delete_first_line(t_fdf *params)
 		img[cur] = 0;
 }
 
-int		faster_display_x(t_fdf params, int y, int x)
+int		faster_display(t_fdf params, int y, int x)
 {
 	int s_win_x;
 	int s_win_y;
 
 	s_win_x = params.s_win.x;
 	s_win_y = params.s_win.y;
-	if ((MAP_YX.coord.y < 0) && (MAP_PX.coord.y < 0))
-		return (0);
-	if ((MAP_YX.coord.x < 0) && (MAP_PX.coord.x < 0))
-		return (0);
-	if ((MAP_YX.coord.x > s_win_x) && (MAP_PX.coord.x > s_win_x))
-		return (0);
-	if ((MAP_YX.coord.y > s_win_y) && (MAP_PX.coord.y > s_win_y))
-		return (0);
 	if ((x + 1) < (params.s_map.x - 1) && (y + 1) < (params.s_map.y - 1))
 	{
-		if (((MAP_YX.coord.y < 0) && (MAP_PY.coord.y < 0)) &&
-			MAP[y + 1][x + 1].coord.y < 0)
+		if (MAP_YX.coord.y < 0 && MAP_PX.coord.y < 0 &&
+			MAP[y + 1][x + 1].coord.y < 0 && MAP_PY.coord.y < 0)
+			return (0);
+		if (MAP_YX.coord.x < 0 && MAP_PX.coord.x < 0 &&
+			MAP[y + 1][x + 1].coord.x < 0 && MAP_PY.coord.x < 0)
+			return (0);
+		if (MAP_YX.coord.x > s_win_x && MAP_PX.coord.x > s_win_x &&
+			MAP[y + 1][x + 1].coord.x > s_win_x && MAP_PY.coord.x > s_win_x)
+			return (0);
+		if (MAP_YX.coord.y > s_win_y && MAP_PX.coord.y > s_win_y &&
+			MAP[y + 1][x + 1].coord.y > s_win_y && MAP_PY.coord.y > s_win_y)
 			return (0);
 	}
 	return (1);
-}
-
-int		faster_display_y(t_fdf params, int y, int x)
-{
-	int s_win_x;
-	int s_win_y;
-
-	s_win_x = params.s_win.x;
-	s_win_y = params.s_win.y;
-	if ((MAP_YX.coord.y < 0) && (MAP_PY.coord.y < 0))
-		return (0);
-	if ((MAP_YX.coord.x < 0) && (MAP_PY.coord.x < 0))
-		return (0);
-	if ((MAP_YX.coord.x > s_win_x) && (MAP_PY.coord.x > s_win_x))
-		return (0);
-	if ((MAP_YX.coord.y > s_win_y) && (MAP_PY.coord.y > s_win_y))
-		return (0);
-	if ((x + 1) < (params.s_map.x - 1) && (y + 1) < (params.s_map.y - 1))
-	{
-		if (((MAP_YX.coord.y < 0) && (MAP_PX.coord.y < 0)) &&
-			MAP[y + 1][x + 1].coord.y < 0)
-			return (0);
-	}
-	return (1);
-}
-
-void	free_line_map(t_map *tile)
-{
-	if (tile->line_x)
-		free(tile->line_x);
-	if (tile->line_y)
-		free(tile->line_y);
 }
 
 void	print_map_iso(t_fdf params)
@@ -96,10 +73,10 @@ void	print_map_iso(t_fdf params)
 		{
 			MAP_YX.line_x = NULL;
 			MAP_YX.line_y = NULL;
-			if (x < (params.s_map.x - 1) && faster_display_x(params, y, x))
+			if (x < (params.s_map.x - 1) && faster_display(params, y, x))
 				MAP_YX.line_x = (MAP_YX.coord.y > MAP_PX.coord.y) ? draw_line(\
 				&params, MAP_PX, MAP_YX) : draw_line(&params, MAP_YX, MAP_PX);
-			if (y < (params.s_map.y - 1) && faster_display_y(params, y, x))
+			if (y < (params.s_map.y - 1) && faster_display(params, y, x))
 				MAP_YX.line_y = (MAP_YX.coord.y > MAP_PY.coord.y) ? draw_line(\
 				&params, MAP_PY, MAP_YX) : draw_line(&params, MAP_YX, MAP_PY);
 			delete_background(&params, y, x);

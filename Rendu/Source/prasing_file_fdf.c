@@ -54,5 +54,6 @@ char	***parsing_file(const char *name)
 	get_next_line(fd, &line);
 	ft_strdel(&line);
 	ret[cur] = NULL;
+	close(fd);
 	return (ret);
 }

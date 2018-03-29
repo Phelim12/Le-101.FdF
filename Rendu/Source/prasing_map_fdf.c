@@ -28,8 +28,8 @@ void	init_struct_fdf(t_fdf *ptr, int init)
 		ptr->s_map = search_max_line_fdf(ptr->file_map);
 		ptr->s_line = (ptr->s_win.x + ptr->s_win.y);
 		ptr->s_line /= ((ptr->s_map.y + ptr->s_map.x));
-		if (ptr->s_line < 3)
-			ptr->s_line = 3;
+		if (ptr->s_line < 5)
+			ptr->s_line = 5;
 	}
 	c_x = ((ptr->s_map.x - 1) - (ptr->s_map.y - 1)) * (ptr->s_line / 1.42);
 	c_y = ((ptr->s_map.x - 1) + (ptr->s_map.y - 1)) * (ptr->s_line / 3.22);

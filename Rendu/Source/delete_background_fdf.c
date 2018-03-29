@@ -91,14 +91,15 @@ void	delete_background(t_fdf *params, int y, int x)
 
 	tile = MAP_PTR[y][x];
 	max = tile.coord.y;
-	if (tile.line_x && max < MAP_PTR[y][x + 1].coord.y)
+	if ((x < params->s_map.x - 1) && max < MAP_PTR[y][x + 1].coord.y)
 		max = MAP_PTR[y][x + 1].coord.y;
-	if (tile.line_y && max < MAP_PTR[y + 1][x].coord.y)
+	if ((y < params->s_map.y - 1) && max < MAP_PTR[y + 1][x].coord.y)
 		max = MAP_PTR[y + 1][x].coord.y;
-	if (tile.line_y && tile.line_x && max < MAP_PTR[y + 1][x + 1].coord.y)
+	if ((y < params->s_map.y - 1) && (x < params->s_map.x - 1) && \
+		max < MAP_PTR[y + 1][x + 1].coord.y)
 		max = MAP_PTR[y + 1][x + 1].coord.y;
 	if ((x == (params->s_map.x - 1)) || (y == (params->s_map.y - 1)))
-		max = params->min_y;
+		max = params->s_win.y;
 	if (max > params->s_win.y)
 		max = params->s_win.y;
 	delete_background_center(params, y, x, max);

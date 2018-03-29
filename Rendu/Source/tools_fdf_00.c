@@ -66,9 +66,9 @@ void	rev_line(t_pos *line)
 int		modif_params_map(int key, t_fdf *params)
 {
 	if (key == 69)
-		params->s_line += 1;
+		params->s_line *= 1.20;
 	if (key == 78)
-		params->s_line -= 1;
+		params->s_line /= 1.20;
 	if (key == 24)
 		params->alt += 0.1;
 	if (key == 27)
@@ -81,9 +81,9 @@ int		modif_params_map(int key, t_fdf *params)
 		params->x += (params->s_win.x / 20);
 	if (key == 124)
 		params->x -= (params->s_win.x / 20);
-	if (params->s_line < 3)
+	if (params->s_line < 5)
 	{
-		params->s_line = 3;
+		params->s_line = 5;
 		return (1);
 	}
 	return (0);

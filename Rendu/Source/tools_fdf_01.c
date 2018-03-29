@@ -38,7 +38,7 @@ int		size_win_width(void)
 			free(line);
 		}
 		else
-			printf("\n");
+			ft_printf("\n");
 	}
 	return (ret);
 }
@@ -58,7 +58,7 @@ int		size_win_height(void)
 			free(line);
 		}
 		else
-			printf("\n");
+			ft_printf("\n");
 	}
 	return (ret);
 }
